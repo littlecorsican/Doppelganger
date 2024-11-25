@@ -24,8 +24,10 @@ with pyvirtualcam.Camera(width=width, height=height, fps=int(fps), fmt=PixelForm
     while True:
         ret, frame = cap.read()
         if not ret:
-            print("End of video or cannot read frame.")
-            break
+            # print("End of video or cannot read frame.")
+            # break
+            cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to the first frame
+            continue
 
         # Optionally, process the frame (e.g., resize, add effects, etc.)
         # For example, converting to grayscale:
@@ -37,6 +39,10 @@ with pyvirtualcam.Camera(width=width, height=height, fps=int(fps), fmt=PixelForm
 
         # Wait for the next frame
         cam.sleep_until_next_frame()
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to exit
+            print("Exit key pressed. Stopping...")
+            break
 
 # Release the video file
 cap.release()
